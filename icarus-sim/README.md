@@ -1,9 +1,9 @@
 # login
 
 ```bash
-ssh hyu@rssh.rhic.bnl.gov
-ssh hyu@dune0001.sdcc.bnl.gov
-scp ~/.ssh/id_rsa.pub hyu@rftpexp.rhic.bnl.gov:.ssh/authorized_keys
+ssh <usr>@rssh.rhic.bnl.gov
+ssh <usr>@dune0001.sdcc.bnl.gov
+scp ~/.ssh/id_rsa.pub <usr>@rftpexp.rhic.bnl.gov:.ssh/authorized_keys
 
 exec bash -l
 source /cvmfs/larsoft.opensciencegrid.org/products/setup
