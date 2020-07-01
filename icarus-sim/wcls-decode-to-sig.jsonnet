@@ -40,7 +40,7 @@ local params = if reality == 'data' then data_params else simu_params;
 local tools_maker = import 'pgrapher/common/tools.jsonnet';
 local tools_orig = tools_maker(params);
 local tools = tools_orig {
-  anodes : [tools_orig.anodes[0],],
+    // anodes : [tools_orig.anodes[0],],
 };
 
 local wcls_maker = import 'pgrapher/ui/wcls/nodes.jsonnet';

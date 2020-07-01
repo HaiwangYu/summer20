@@ -23,7 +23,10 @@ local params = base {
   },
 };
 
-local tools = tools_maker(params);
+local tools_orig = tools_maker(params);
+local tools = tools_orig {
+    // anodes : [tools_orig.anodes[0],tools_orig.anodes[1],],
+};
 
 local sim_maker = import 'pgrapher/experiment/icarus/sim.jsonnet';
 local sim = sim_maker(params, tools);
@@ -258,8 +261,65 @@ local pipe_reducer = util.fansummer('DepoSetFanout', analog_pipes, frame_summers
 //local frameio = io.numpy.frames(output);
 local sink = sim.frame_sink;
 
+
+local deposplats = [sim.make_ductor('splat%d'% anode.data.ident, anode, tools.pirs[0], 'DepoSplat') for anode in tools.anodes] ;
+local hio_truth = [g.pnode({
+      type: 'HDF5FrameTap',
+      name: 'hio_truth%d' % anode.data.ident,
+      data: {
+        anode: wc.tn(anode),
+        trace_tags: ['ductor%d'% anode.data.ident],
+        filename: "g4-tru-%d.h5" % anode.data.ident,
+        chunk: [0, 0], // ncol, nrow
+        gzip: 2,
+        high_throughput: true,
+      },  
+    }, nin=1, nout=1),
+    for anode in tools.anodes
+    ];
+local truth_pipe = [
+  g.pipeline([
+               deposplats[n],
+               hio_truth[n],
+               g.pnode({ type: 'DumpFrames', name: 'truth_pipe%d'%n  }, nin=1, nout=0)
+             ],
+             'truth_pipe%d' % n)
+  for n in anode_iota
+];
+local depo_fanout_apa = g.pnode({
+    type:'DepoFanout',
+    name:'depo_fanout_apa',
+    data:{
+        multiplicity:nanodes,
+        tags: [],
+    }}, nin=1, nout=nanodes);
+
+local truth_fork = g.intern(innodes=[depo_fanout_apa], centernodes=truth_pipe, outnodes=[],
+                    edges = [
+                        g.edge(depo_fanout_apa, truth_pipe[n],  n, 0) for n in anode_iota
+                      ],
+);
+
+local depo_fanout_truth_reco = g.pnode({
+    type:'DepoFanout',
+    name:'depo_fanout_truth_reco',
+    data:{
+        multiplicity:2,
+        tags: [],
+    }}, nin=1, nout=2);
+
 // local graph = g.pipeline([wcls_input.depos, drifter,  wcls_simchannel_sink, bagger, pipe_reducer, retagger, wcls_output.sim_digits, sink]);
-local graph = g.pipeline([wcls_input.depos, drifter,  wcls_simchannel_sink, bagger, pipe_reducer, sink]);
+// local graph = g.pipeline([wcls_input.depos, drifter,  wcls_simchannel_sink, bagger, pipe_reducer, sink]);
+local graph = g.intern(innodes=[wcls_input.depos], centernodes=[drifter, wcls_simchannel_sink, bagger, pipe_reducer, depo_fanout_truth_reco, truth_fork], outnodes=[sink],
+                    edges = [
+                        g.edge(wcls_input.depos, drifter,  0, 0),
+                        // g.edge(drifter, bagger,  0, 0),
+                        g.edge(drifter, depo_fanout_truth_reco,  0, 0),
+                        g.edge(depo_fanout_truth_reco, bagger, 0, 0),
+                        g.edge(depo_fanout_truth_reco, truth_fork, 1, 0),
+                        g.edge(bagger, pipe_reducer, 0, 0),
+                        g.edge(pipe_reducer, sink, 0, 0),
+                      ],);
 
 local app = {
   type: 'Pgrapher',
