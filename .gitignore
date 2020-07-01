@@ -1,0 +1,7 @@
+*.db
+*log
+log*
+cfg
+*.root
+*.h5
+*.json
