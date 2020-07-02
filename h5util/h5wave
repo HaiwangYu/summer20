@@ -1,0 +1,47 @@
+#!/usr/bin/env python
+
+import numpy as np
+import h5py
+import matplotlib.pyplot as plt
+import sys
+
+def get_wave(frame, ch):
+  print(frame.shape)
+  wave = frame[:, ch]
+  return wave
+
+def comp(fn1, key1, ch1):
+
+  # ref
+  data  = h5py.File(fn1, 'r')
+  frame = np.array(data[key1])
+  print(frame.shape)
+  # frame = np.transpose(frame, axes=[1, 0])
+  # frame = frame[:,800:1600]
+  w1 = get_wave(frame, ch1)
+  
+  fontsize = 24
+  plt.figure()
+  a = plt.gca()
+  # a.set_aspect(1.)
+  # a.set_title('{} {}'.format(fn1, fn2))
+
+  plt.plot(w1,'-', label='{}, {}, {}'.format(fn1, key1, ch1))
+  # plt.legend(loc='best',fontsize=fontsize)
+  plt.grid()
+  plt.xticks(fontsize=fontsize)
+  plt.yticks(fontsize=fontsize)
+  plt.xlabel('Time [0.5$\mu$s]',fontsize=fontsize)
+  plt.ylabel('ADC',fontsize=fontsize)
+  plt.show()
+  
+  #print('mean = %f' % np.mean(wave))
+  #print('std. = %f' % np.std(wave))
+
+
+if __name__ == '__main__':
+  fn1  = sys.argv[1]
+  key1 = sys.argv[2]
+  ch1  = int(sys.argv[3])
+  
+  comp(fn1, key1, ch1)

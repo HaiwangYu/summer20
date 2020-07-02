@@ -1,0 +1,58 @@
+#!/usr/bin/env python
+
+import sys
+import numpy as np
+import h5py
+import matplotlib.pyplot as plt
+
+def baseline_correction(f) :
+    for i in range(f.shape[1]):
+        f[:,i] = f[:,i] - np.median(f[:,i])
+    return f
+
+if __name__ == '__main__':
+    fn = sys.argv[1]
+    key = sys.argv[2]
+    
+    data = h5py.File(fn, 'r')
+    f = data.get(key)
+    if f is None:
+        print('f is None')
+        exit()
+    frame = np.array(f)
+    frame = baseline_correction(frame)
+    print(frame.shape)
+    frame_ma = np.ma.array(frame)
+
+    # plt.imshow(np.ma.masked_where(frame_ma<=0,frame_ma), cmap="rainbow", interpolation="none"
+    # plt.imshow(frame_ma>0, cmap="viridis", interpolation="none"
+    plt.imshow(frame_ma, cmap="bwr", interpolation="none"
+    # , extent = [0 , 2560, 0 , 6000]
+    , origin='lower'
+    , aspect='auto'
+    # , aspect=0.8/4.7
+    # , aspect=0.1
+    )
+    plt.colorbar()
+    # plt.xlim([0, 1600])
+    # plt.xlim([0, 800]) # U
+    # plt.xlim([800, 1600]) # V
+    # plt.clim([0,1])
+    # plt.clim([2300,2400]) # orig U, V
+    # plt.clim([885,915]) # orig W
+    # plt.grid()
+
+    fontsize = 26
+    ax = plt.gca()
+    ax.set_title('ProtoDUNE Data', fontsize=fontsize)
+    plt.xticks(fontsize=fontsize)
+    plt.yticks(fontsize=fontsize)
+    ax.xaxis.set_major_locator(plt.MaxNLocator(5))
+    plt.xlabel('wire number', fontsize=fontsize)
+    plt.ylabel('time [tick]', fontsize=fontsize)
+    plt.xlim([0, 800])
+    plt.ylim([0, 6000])
+    plt.clim([-50,50])
+    plt.show()
+
+

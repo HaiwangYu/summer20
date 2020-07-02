@@ -1,0 +1,56 @@
+#!/usr/bin/env python
+
+import numpy as np
+import h5py
+import matplotlib.pyplot as plt
+import sys
+
+def get_wave(frame, ch):
+  print(frame.shape)
+  wave = frame[:, ch]
+  return wave
+
+def comp(fn1, fn2, key1, key2, ch1, ch2):
+
+  # ref
+  data  = h5py.File(fn1, 'r')
+  frame = np.array(data[key1])
+  print(frame.shape)
+  # frame = np.transpose(frame, axes=[1, 0])
+  # frame = frame[:,800:1600]
+  w1 = get_wave(frame, ch1)
+
+  # test
+  data  = h5py.File(fn2, 'r')
+  frame = np.array(data[key2])
+  # frame = np.transpose(frame, axes=[1, 0])
+  # frame = frame[:,800:1600]
+  w2 = get_wave(frame, ch2)
+
+  plt.figure()
+  a = plt.gca()
+  # a.set_title('{} {}'.format(fn1, fn2))
+
+  plt.plot(w1,'-o', label='{}, {}, {}'.format(fn1, key1, ch1))
+  plt.plot(w2,'-',  label='{}, {}, {}'.format(fn2, key2, ch2))
+  plt.legend(loc='best',fontsize=15)
+  plt.grid()
+  plt.show()
+  
+  #print('mean = %f' % np.mean(wave))
+  #print('std. = %f' % np.std(wave))
+
+
+if __name__ == '__main__':
+  fn1  = sys.argv[1]
+  fn2  = sys.argv[2]
+  key1 = sys.argv[3]
+  ch1  = int(sys.argv[4])
+  key2 = key1
+  ch2  = ch1
+  if len(sys.argv) > 5:
+    key2 = sys.argv[5]
+  if len(sys.argv) > 6:
+    ch2 = sys.argv[6]
+  
+  comp(fn1, fn2, key1, key2, ch1, ch2)
