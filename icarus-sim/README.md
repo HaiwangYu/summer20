@@ -49,4 +49,15 @@ lar -n1 -c wcls-multitpc-sim-drift-simchannel.fcl g4.root -o wcsim.root
 lar -n1 -c wcls-decode-to-sig.fcl wcsim.root -o decon.root
 ```
 
+# python
 
+install needed packages
+```bash
+pip install matplotlib
+pip install h5py
+```
+
+using h5plot to show the frame, e.g.:
+```bash
+../h5util/h5plot g4-tru-122.h5 /100/frame_ductor122
+```
