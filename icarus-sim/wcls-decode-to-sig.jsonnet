@@ -32,8 +32,8 @@ local raw_input_label = std.extVar('raw_input_label');  // eg "daq"
 local volume_label = std.extVar('tpc_volume_label');  // eg "",0,1,2,3
 local volume = if volume_label == '' then -1 else std.parseInt(volume_label);
 
-local data_params = import 'cfg/pgrapher/experiment/icarus/params.jsonnet';
-local simu_params = import 'cfg/pgrapher/experiment/icarus/simparams.jsonnet';
+local data_params = import 'pgrapher/experiment/icarus/params.jsonnet';
+local simu_params = import 'pgrapher/experiment/icarus/simparams.jsonnet';
 local params = if reality == 'data' then data_params else simu_params;
 
 
