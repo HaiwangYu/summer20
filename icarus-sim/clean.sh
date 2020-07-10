@@ -1,0 +1,1 @@
+rm -f Supplemental-*.root
