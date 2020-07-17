@@ -25,7 +25,7 @@ local params = base {
 
 local tools_orig = tools_maker(params);
 local tools = tools_orig {
-    // anodes : [tools_orig.anodes[0],tools_orig.anodes[1],],
+    anodes : [tools_orig.anodes[0],tools_orig.anodes[1],],
 };
 
 local sim_maker = import 'pgrapher/experiment/icarus/sim.jsonnet';
@@ -322,7 +322,8 @@ local graph = g.intern(innodes=[wcls_input.depos], centernodes=[drifter, wcls_si
                       ],);
 
 local app = {
-  type: 'Pgrapher',
+  // type: 'Pgrapher',
+  type: 'TbbFlow',
   data: {
     edges: g.edges(graph),
   },

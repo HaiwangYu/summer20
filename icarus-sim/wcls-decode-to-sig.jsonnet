@@ -180,16 +180,16 @@ local hio_sp = [g.pnode({
 local nfsp_pipes = [
   g.pipeline([
                chsel_pipes[n],
-               // magnifyio.orig_pipe[n],
+               magnifyio.orig_pipe[n],
 
-               nf_pipes[n],
-               // magnifyio.raw_pipe[n],
+              //  nf_pipes[n],
+              //  magnifyio.raw_pipe[n],
 
-               sp_pipes[n],
-               hio_sp[n],
-               // magnifyio.decon_pipe[n],
-               // magnifyio.threshold_pipe[n],
-               // magnifyio.debug_pipe[n], // use_roi_debug_mode: true in sp.jsonnet
+              //  sp_pipes[n],
+              //  hio_sp[n],
+              //  magnifyio.decon_pipe[n],
+              //  magnifyio.threshold_pipe[n],
+              //  magnifyio.debug_pipe[n], // use_roi_debug_mode: true in sp.jsonnet
              ],
              'nfsp_pipe_%d' % n)
   for n in std.range(0, std.length(tools.anodes) - 1)

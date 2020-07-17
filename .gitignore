@@ -5,3 +5,5 @@ cfg
 *.root
 *.h5
 *.json
+pt13
+wire-cell-toolkit
