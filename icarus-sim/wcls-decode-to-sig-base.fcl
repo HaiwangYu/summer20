@@ -11,7 +11,7 @@ standard_wirecell_sigproc:
      loglevels: ["debug", "pgraph:info", "glue:debug", "sigproc:debug"]
   
      // Libraries in which to look for WCT components
-     plugins: ["WireCellGen", "WireCellSigProc", "WireCellRoot", "WireCellPgraph", "WireCellLarsoft", "WireCellHio"]
+     plugins: ["WireCellGen", "WireCellSigProc", "WireCellRoot", "WireCellPgraph", "WireCellTbb", "WireCellLarsoft", "WireCellHio"]
   
      // The tool marshals the art::Event to these visitors before.
      // See notes below in params.

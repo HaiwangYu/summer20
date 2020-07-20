@@ -182,7 +182,7 @@ local nfsp_pipes = [
                chsel_pipes[n],
                magnifyio.orig_pipe[n],
 
-              //  nf_pipes[n],
+               nf_pipes[n],
               //  magnifyio.raw_pipe[n],
 
               //  sp_pipes[n],
@@ -251,7 +251,7 @@ local sink = g.pnode({ type: 'DumpFrames' }, nin=1, nout=0);
 local graph = g.pipeline([wcls_input.adc_digits, fanpipe, retagger, wcls_output.sp_signals, sink]);
 
 local app = {
-  type: 'Pgrapher',
+  type: 'TbbFlow',
   data: {
     edges: g.edges(graph),
   },

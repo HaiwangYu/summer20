@@ -1,10 +1,15 @@
-#include "services_icarus.fcl"
-#include "simulationservices_icarus.fcl"
+# #include "services_icarus.fcl"
+# #include "simulationservices_icarus.fcl"
 
 services:
 {
-   TFileService:            { }
-                             @table::icarus_basic_services
+    # TFileService:            { }
+    #                         @table::icarus_basic_services
+    # TFileService: { 
+    # closeFileFast: true  # default
+    # fileName:  "%ifb_raw_anal.root"
+    # tmpDir: "<parent-path-of-filename>"  # default
+    # }
 }
 
 process_name: wclssim
@@ -18,9 +23,10 @@ physics :{
          wcls_main: {
             tool_type: WCLS
             apps: ["Pgrapher"]
+            # apps: ["TbbFlow"]
 
-            // logsinks: ["stdout"]
-            // loglevels: ["magnify:debug"]
+            logsinks: ["stdout"]
+            loglevels: ["debug"]
 
             plugins: ["WireCellPgraph", "WireCellTbb", "WireCellGen","WireCellSio","WireCellRoot","WireCellLarsoft", "WireCellHio"]
 
@@ -33,11 +39,11 @@ physics :{
 
             inputers: ["wclsSimDepoSource:electron"]
             outputers: [
-               "wclsSimChannelSink:postdrift",
-               "wclsFrameSaver:simdigits0",
-               "wclsFrameSaver:simdigits1",
-               "wclsFrameSaver:simdigits2",
-               "wclsFrameSaver:simdigits3"
+            #    "wclsSimChannelSink:postdrift"
+            #    "wclsFrameSaver:simdigits0",
+            #    "wclsFrameSaver:simdigits1",
+            #    "wclsFrameSaver:simdigits2",
+            #    "wclsFrameSaver:simdigits3"
             //   ,"wclsFrameSaver:nfdigits",
             //   "wclsFrameSaver:spsignals",
             //   "wclsFrameSaver:spthresholds"
@@ -47,25 +53,28 @@ physics :{
             params: {
             }
             structs: {
-              # load values from simulationservices_icarus.fcl
-              # Longitudinal diffusion constant [cm2/ns]
-              DL: @local::icarus_largeantparameters.LongitudinalDiffusion
+                # load values from simulationservices_icarus.fcl
+                # Longitudinal diffusion constant [cm2/ns]
+                # DL: @local::icarus_largeantparameters.LongitudinalDiffusion
+                DL: 4.0e-9
 
-              # Transverse diffusion constant [cm2/ns]
-              DT: @local::icarus_largeantparameters.TransverseDiffusion
+                # Transverse diffusion constant [cm2/ns]
+                # DT: @local::icarus_largeantparameters.TransverseDiffusion
+                DT: 8.8e-9
 
-              # load values from services_icarus.fcl
-              # Electron lifetime [microseconds]
-              lifetime: @local::icarus_detproperties.Electronlifetime
+                # load values from services_icarus.fcl
+                # Electron lifetime [microseconds]
+                # lifetime: @local::icarus_detproperties.Electronlifetime
+                lifetime: 9.6e3
 
-              # Electron drift speed, assumes a certain applied E-field [mm/us]
-              # driftSpeed: 1.565
+                # Electron drift speed, assumes a certain applied E-field [mm/us]
+                # driftSpeed: 1.565
             }
 
          }
       }
    }
-   p1 : [ plopper, simmer ]
+   p1 : [ simmer ]
    outputFiles : [ out ]
    
    trigger_paths : [ p1 ]

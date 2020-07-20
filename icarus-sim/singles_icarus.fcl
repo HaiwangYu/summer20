@@ -10,6 +10,6 @@ icarus_singlep.X0:       [-365]  # in cm in world coordinates, ie x = 0 is at th
 icarus_singlep.Y0:       [0.]   #   
 icarus_singlep.Z0:       [-900]   # in cm in world coordinates
 icarus_singlep.Theta0YZ: [0.0]  # beam is along the z axis.
-icarus_singlep.Theta0XZ: [0.0]  # beam is along the z axis.
+icarus_singlep.Theta0XZ: [22.]  # beam is along the z axis.
 
 END_PROLOG
