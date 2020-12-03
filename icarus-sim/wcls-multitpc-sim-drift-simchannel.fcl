@@ -1,5 +1,5 @@
-# #include "services_icarus.fcl"
-# #include "simulationservices_icarus.fcl"
+#include "services_icarus.fcl"
+#include "simulationservices_icarus.fcl"
 
 services:
 {
@@ -12,6 +12,9 @@ services:
     # }
 }
 
+# "Pgrapher" or "TbbFlow"
+wc_engine: "Pgrapher"
+
 process_name: wclssim
 physics :{
    producers: {
@@ -22,8 +25,8 @@ physics :{
          module_type : WireCellToolkit
          wcls_main: {
             tool_type: WCLS
-            apps: ["Pgrapher"]
-            # apps: ["TbbFlow"]
+
+            apps: [@local::wc_engine]
 
             logsinks: ["stdout"]
             loglevels: ["debug"]
@@ -39,33 +42,34 @@ physics :{
 
             inputers: ["wclsSimDepoSource:electron"]
             outputers: [
-            #    "wclsSimChannelSink:postdrift"
-            #    "wclsFrameSaver:simdigits0",
-            #    "wclsFrameSaver:simdigits1",
-            #    "wclsFrameSaver:simdigits2",
-            #    "wclsFrameSaver:simdigits3"
-            //   ,"wclsFrameSaver:nfdigits",
-            //   "wclsFrameSaver:spsignals",
-            //   "wclsFrameSaver:spthresholds"
+                "wclsSimChannelSink:postdrift",
+                "wclsFrameSaver:simdigits0",
+                "wclsFrameSaver:simdigits1",
+                "wclsFrameSaver:simdigits2",
+                "wclsFrameSaver:simdigits3"
+                # ,"wclsFrameSaver:nfdigits",
+                # "wclsFrameSaver:spsignals",
+                # "wclsFrameSaver:spthresholds"
             ]
 
             // Make available parameters via Jsonnet's std.extVar()
             params: {
+                engine: @local::wc_engine
             }
             structs: {
                 # load values from simulationservices_icarus.fcl
                 # Longitudinal diffusion constant [cm2/ns]
-                # DL: @local::icarus_largeantparameters.LongitudinalDiffusion
-                DL: 4.0e-9
+                DL: @local::icarus_largeantparameters.LongitudinalDiffusion
+                # DL: 4.0e-9
 
                 # Transverse diffusion constant [cm2/ns]
-                # DT: @local::icarus_largeantparameters.TransverseDiffusion
-                DT: 8.8e-9
+                DT: @local::icarus_largeantparameters.TransverseDiffusion
+                # DT: 8.8e-9
 
                 # load values from services_icarus.fcl
                 # Electron lifetime [microseconds]
-                # lifetime: @local::icarus_detproperties.Electronlifetime
-                lifetime: 9.6e3
+                lifetime: @local::icarus_detproperties.Electronlifetime
+                # lifetime: 9.6e3
 
                 # Electron drift speed, assumes a certain applied E-field [mm/us]
                 # driftSpeed: 1.565

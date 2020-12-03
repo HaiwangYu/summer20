@@ -22,6 +22,7 @@ local params = base {
     // drift_speed: std.extVar('driftSpeed') * wc.mm / wc.us,
   },
 };
+local engine = std.extVar('engine');
 
 local tools_orig = tools_maker(params);
 local tools = tools_orig {
@@ -236,7 +237,7 @@ local frame_summers = [
         },
     }, nin=2, nout=1) for n in std.range(0, 3)];
 
-local actpipes = [g.pipeline([noises[n], /*coherent_noises[n],*/ digitizers[n], /*retaggers[n],*/ /*wcls_output.sim_digits[n]*/], name="noise-digitizer%d" %n) for n in std.range(0,3)];
+local actpipes = [g.pipeline([noises[n], /*coherent_noises[n],*/ digitizers[n], /*retaggers[n],*/ wcls_output.sim_digits[n]], name="noise-digitizer%d" %n) for n in std.range(0,3)];
 local util = import 'pgrapher/experiment/icarus/funcs.jsonnet';
 local outtags = ['orig%d' % n for n in std.range(0, 3)];
 local pipe_reducer = util.fansummer('DepoSetFanout', analog_pipes, frame_summers, actpipes, 'FrameFanin', 'fansummer', outtags);
@@ -312,24 +313,24 @@ local depo_fanout_truth_reco = g.pnode({
 // local graph = g.pipeline([wcls_input.depos, drifter,  wcls_simchannel_sink, bagger, pipe_reducer, sink]);
 local graph = g.intern(innodes=[wcls_input.depos],
                     centernodes=[drifter, wcls_simchannel_sink, bagger, pipe_reducer,
-                    // depo_fanout_truth_reco, truth_fork
+                    depo_fanout_truth_reco, truth_fork
                     ],
                     outnodes=[sink],
                     edges = [
                         g.edge(wcls_input.depos, drifter,  0, 0),
-                        g.edge(drifter, bagger,  0, 0),
 
-                        // g.edge(drifter, depo_fanout_truth_reco,  0, 0),
-                        // g.edge(depo_fanout_truth_reco, bagger, 0, 0),
-                        // g.edge(depo_fanout_truth_reco, truth_fork, 1, 0),
+                        // g.edge(drifter, bagger,  0, 0),
+
+                        g.edge(drifter, depo_fanout_truth_reco,  0, 0),
+                        g.edge(depo_fanout_truth_reco, bagger, 0, 0),
+                        g.edge(depo_fanout_truth_reco, truth_fork, 1, 0),
                         
                         g.edge(bagger, pipe_reducer, 0, 0),
                         g.edge(pipe_reducer, sink, 0, 0),
                       ],);
 
 local app = {
-    type: 'Pgrapher',
-    // type: 'TbbFlow',
+    type: engine,
     data: {
         edges: g.edges(graph),
     },

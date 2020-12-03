@@ -179,17 +179,17 @@ local hio_sp = [g.pnode({
 
 local nfsp_pipes = [
   g.pipeline([
-               chsel_pipes[n],
-               magnifyio.orig_pipe[n],
+                chsel_pipes[n],
+                magnifyio.orig_pipe[n],
 
-               nf_pipes[n],
-              //  magnifyio.raw_pipe[n],
+                nf_pipes[n],
+                // magnifyio.raw_pipe[n],
 
-              //  sp_pipes[n],
-              //  hio_sp[n],
-              //  magnifyio.decon_pipe[n],
-              //  magnifyio.threshold_pipe[n],
-              //  magnifyio.debug_pipe[n], // use_roi_debug_mode: true in sp.jsonnet
+                sp_pipes[n],
+                hio_sp[n],
+                // magnifyio.decon_pipe[n],
+                // magnifyio.threshold_pipe[n],
+                // magnifyio.debug_pipe[n], // use_roi_debug_mode: true in sp.jsonnet
              ],
              'nfsp_pipe_%d' % n)
   for n in std.range(0, std.length(tools.anodes) - 1)
@@ -251,7 +251,7 @@ local sink = g.pnode({ type: 'DumpFrames' }, nin=1, nout=0);
 local graph = g.pipeline([wcls_input.adc_digits, fanpipe, retagger, wcls_output.sp_signals, sink]);
 
 local app = {
-  type: 'TbbFlow',
+  type: 'Pgrapher',
   data: {
     edges: g.edges(graph),
   },
