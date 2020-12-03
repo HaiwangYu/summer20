@@ -5,6 +5,7 @@ jsonnet \
 --ext-code DL=0 \
 --ext-code DT=0 \
 --ext-code lifetime=0 \
+-V engine=Pgrapher \
 -V epoch=after \
 -V reality=data \
 -V signal_output_form=sparse \
