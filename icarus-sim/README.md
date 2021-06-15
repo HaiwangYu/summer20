@@ -1,7 +1,7 @@
 # login
 
 ```bash
-ssh <usr>@rssh.rhic.bnl.gov
+ssh <usr>@ssh.sdcc.bnl.gov
 ssh <usr>@dune0001.sdcc.bnl.gov
 scp ~/.ssh/id_rsa.pub <usr>@rftpexp.rhic.bnl.gov:.ssh/authorized_keys
 
